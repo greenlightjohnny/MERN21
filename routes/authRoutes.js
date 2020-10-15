@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const User = require("../models/User");
-const Joi = require("@hapi/joi");
+
 const { regValidation, loginValidation } = require("../validation");
 
 /// Made async, node gets client request and needs to connect to send data to the DB server and get a reply
