@@ -43,6 +43,8 @@ router.post("/register/", async (req, res) => {
   }
 });
 
+// LOGIN
+
 router.post("/login/", async (req, res) => {
   const { errors } = loginValidation(req.body);
   if (errors) {
@@ -61,7 +63,12 @@ router.post("/login/", async (req, res) => {
     return res.status(400).send("Password does not match");
   }
   if (compare) {
-    return res.status(200).send("You made ittt");
+    const jwtSecret = process.env.JWT_SECRET;
+    const token = jwt.sign({ _id: userExists._id }, jwtSecret);
+    res.header("dukes_cookie", token);
+    res.cookie("dukes_cookie", token, { httpOnly: true, sameSite: true });
+    res.status(200).json({ isAuthenticated: true, user: {} });
+    r;
   }
 });
 
