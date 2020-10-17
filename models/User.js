@@ -1,3 +1,5 @@
+/// Mongoose schema, sets outlines and requirements for the MongoDB database. Also, one month solid work, yay!
+
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({

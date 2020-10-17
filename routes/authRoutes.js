@@ -2,6 +2,7 @@ const router = require("express").Router();
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const { regValidation, loginValidation } = require("../validation");
+const jwt = require("jsonwebtoken");
 
 /// Made async, node gets client request and needs to connect to send data to the DB server and get a reply
 /////Why was the freaking trailing slash needed?????
@@ -36,14 +37,32 @@ router.post("/register/", async (req, res) => {
   //// Tries to save the new user object to the DB, .save() is a mongoose method. If able to save, sends the saved user back to the client just so we can see for testing.
   try {
     const savedUser = await user.save();
-    res.send(savedUser);
+    res.send({ user: user._id });
   } catch (err) {
     res.status(400).send(err);
   }
 });
 
-// router.post('/login', (req, res) => {
+router.post("/login/", async (req, res) => {
+  const { errors } = loginValidation(req.body);
+  if (errors) {
+    return res.status(400).send(error.details[0].message);
+  }
 
-// })
+  const userExists = await User.findOne({ email: req.body.email });
+
+  if (!userExists) {
+    return res.status(400).send("User not registered");
+  }
+
+  const compare = await bcrypt.compare(req.body.password, userExists.password);
+  console.log(compare);
+  if (!compare) {
+    return res.status(400).send("Password does not match");
+  }
+  if (compare) {
+    return res.status(200).send("You made ittt");
+  }
+});
 
 module.exports = router;
