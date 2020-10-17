@@ -67,7 +67,7 @@ router.post("/login/", async (req, res) => {
     const token = jwt.sign({ _id: userExists._id }, jwtSecret);
     res.header("dukes_cookie", token);
     res.cookie("dukes_cookie", token, { httpOnly: true, sameSite: true });
-    res.status(200).json({ isAuthenticated: true, user: {} });
+    res.status(200).json({ isAuthenticated: true, user: { token } });
     r;
   }
 });
